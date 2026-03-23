@@ -41,6 +41,7 @@ import fr.paris.lutece.portal.service.portal.PortalService;
 import fr.paris.lutece.portal.service.security.LuteceUser;
 import fr.paris.lutece.portal.service.security.SecurityService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.web.menu.MenuItem;
 import fr.paris.lutece.portal.web.menu.MenuItem.MenuTreeBuilder;
@@ -51,9 +52,11 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -187,7 +190,7 @@ public class SiteMapApp implements XPageApplication
         int nLevel = 0;
 
         List<MenuItem> mapItems = new ArrayList<MenuItem>( );
-        buildMenu( request, mapItems, PortalService.getRootPageId( ), nLevel );
+        buildMenu( request, mapItems, PortalService.getRootPageId( ), nLevel, new HashSet<>( ) );
 
         Map<String, Object> model = new HashMap<>( );
         model.put( MARK_MAP_ITEMS, MenuTreeBuilder.buildTree( mapItems ) );
@@ -198,8 +201,13 @@ public class SiteMapApp implements XPageApplication
         return t.getHtml();
     }
     
-    private void buildMenu( HttpServletRequest request, List<MenuItem> flatMenu, int nPageId, int nLevel )
+    private void buildMenu( HttpServletRequest request, List<MenuItem> flatMenu, int nPageId, int nLevel, Set<Integer> seenPages )
     {
+        if ( !seenPages.add( nPageId ) )
+        {
+            AppLogService.error( "SiteMapApp : A cycle exists in pages; page id {} was already processed", nPageId );
+            return;
+        }
         Page page = PageHome.getPage( nPageId );
 
         if ( page.isVisible( request ) )
@@ -212,118 +220,8 @@ public class SiteMapApp implements XPageApplication
 
             for ( Page pageChild : PageHome.getChildPagesMinimalData( nPageId ) )
             {
-                buildMenu( request, flatMenu, pageChild.getId( ), nLevel + 1 );
+                buildMenu( request, flatMenu, pageChild.getId( ), nLevel + 1, seenPages );
             }
         }
     }
-
-////    /**
-////     * Build an XML document containing the arborescence of the site pages and transform it with the stylesheet combined with the mode
-////     * 
-////     * @param nMode
-////     *            The selected mode
-////     * @param request
-////     *            The HttpServletRequest
-////     * @return The content of the site map
-////     */
-////    private String buildPageContent( int nMode, HttpServletRequest request )
-////    {
-////        StringBuffer strArborescenceXml = new StringBuffer( );
-////        strArborescenceXml.append( XmlUtil.getXmlHeader( ) );
-////
-////        int nLevel = 0;
-////        findPages( strArborescenceXml, PortalService.getRootPageId( ), nLevel, new HashSet<>( ), request );
-////
-////        // Added in v1.3
-////        // Use the same stylesheet for normal or admin mode
-////        StyleSheet xslSource;
-////
-////        switch( nMode )
-////        {
-////            case MODE_NORMAL:
-////            case MODE_ADMIN:
-////                xslSource = PortalComponentHome.getXsl( PORTAL_COMPONENT_SITE_MAP_ID, MODE_NORMAL );
-////
-////                break;
-////
-////            default:
-////                xslSource = PortalComponentHome.getXsl( PORTAL_COMPONENT_SITE_MAP_ID, nMode );
-////
-////                break;
-////        }
-////
-////        // Added in v1.3
-////        // Add a path param for choose url to use in admin or normal mode
-////        Map<String, String> mapParamRequest = new HashMap<>( );
-////
-////        if ( nMode != MODE_ADMIN )
-////        {
-////            mapParamRequest.put( PARAMETER_SITE_PATH, AppPathService.getPortalUrl( ) );
-////        }
-////        else
-////        {
-////            mapParamRequest.put( PARAMETER_SITE_PATH, AppPathService.getAdminPortalUrl( ) );
-////            mapParamRequest.put( MARKER_TARGET, TARGET_TOP );
-////        }
-////
-////        Properties outputProperties = ModeHome.getOuputXslProperties( nMode );
-////
-////        XmlTransformerService xmlTransformerService = new XmlTransformerService( );
-////
-////        return xmlTransformerService.transformBySourceWithXslCache( strArborescenceXml.toString( ), xslSource, mapParamRequest, outputProperties );
-////    }
-//
-//    /**
-//     * Build recursively the XML document containing the arborescence of the site pages
-//     * 
-//     * @param strXmlArborescence
-//     *            The buffer in which adding the current page of the arborescence
-//     * @param nPageId
-//     *            The current page of the recursive course
-//     * @param nLevel
-//     *            The depth level of the page in the arborescence
-//     * @param request
-//     *            The HttpServletRequest
-//     */
-//    private void findPages( StringBuffer strXmlArborescence, int nPageId, int nLevel, Set<Integer> seenPages, HttpServletRequest request )
-//    {
-//        if ( !seenPages.add( nPageId ) )
-//        {
-//            AppLogService.error( "SiteMapApp : A cycle exists in pages; page id {} was already processed", nPageId );
-//            return;
-//        }
-//        Page page = PageHome.getPage( nPageId );
-//
-//        if ( page.isVisible( request ) )
-//        {
-//            XmlUtil.beginElement( strXmlArborescence, XmlContent.TAG_PAGE );
-//            XmlUtil.addElement( strXmlArborescence, XmlContent.TAG_PAGE_ID, page.getId( ) );
-//            XmlUtil.addElementHtml( strXmlArborescence, XmlContent.TAG_PAGE_NAME, page.getName( ) );
-//            XmlUtil.addElement( strXmlArborescence, XmlContent.TAG_PAGE_DESCRIPTION, page.getDescription( ) );
-//            XmlUtil.addElement( strXmlArborescence, XmlContent.TAG_PAGE_LEVEL, nLevel );
-//
-//            AdminPageJspBean adminPage = new AdminPageJspBean( );
-//
-//            if ( page.getImageContent( ) != null )
-//            {
-//                int nImageLength = page.getImageContent( ).length;
-//
-//                if ( nImageLength >= 1 )
-//                {
-//                    String strPageId = Integer.toString( page.getId( ) );
-//                    XmlUtil.addElement( strXmlArborescence, XmlContent.TAG_PAGE_IMAGE, adminPage.getResourceImagePage( page, strPageId ) );
-//                }
-//            }
-//
-//            XmlUtil.beginElement( strXmlArborescence, XmlContent.TAG_CHILD_PAGES_LIST );
-//
-//            for ( Page pageChild : PageHome.getChildPagesMinimalData( nPageId ) )
-//            {
-//                findPages( strXmlArborescence, pageChild.getId( ), nLevel + 1, seenPages, request );
-//            }
-//
-//            XmlUtil.endElement( strXmlArborescence, XmlContent.TAG_CHILD_PAGES_LIST );
-//            XmlUtil.endElement( strXmlArborescence, XmlContent.TAG_PAGE );
-//        }
-//    }
 }
