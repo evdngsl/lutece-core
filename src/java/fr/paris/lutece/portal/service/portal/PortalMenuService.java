@@ -42,6 +42,7 @@ import fr.paris.lutece.portal.service.page.PageService;
 import fr.paris.lutece.portal.service.security.LuteceUser;
 import fr.paris.lutece.portal.service.security.SecurityService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.web.menu.MenuItem;
 import fr.paris.lutece.util.html.HtmlTemplate;
 
@@ -69,7 +70,6 @@ public final class PortalMenuService extends AbstractCacheableService implements
     private static final String TEMPLATE_MAIN_MENU = "skin/site/menu_main.html";
     private static final String MARK_SITE_PATH = "site_path";
     private static final String MARK_MENU_ITEMS = "items";
-    private static final String PARAMETER_SITE_PATH = "site-path";
 
     // Menus cache
     private static PortalMenuService _singleton;
@@ -170,14 +170,9 @@ public final class PortalMenuService extends AbstractCacheableService implements
             }
         }
 
-        // Added in v1.3
-        // Add a path param for choose url to use in admin or normal mode
-        Map<String, String> mapParamRequest = new HashMap<>( );
-        PortalService.setXslPortalPath( mapParamRequest, nMode );
-
         Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_MENU_ITEMS, menuItems );
-        model.put( MARK_SITE_PATH, mapParamRequest.get( PARAMETER_SITE_PATH ) );
+        model.put( MARK_SITE_PATH, nMode != MODE_ADMIN ? AppPathService.getPortalUrl( ) : AppPathService.getAdminPortalUrl( ) );
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MAIN_MENU, null, model );
         return template.getHtml( );
     }

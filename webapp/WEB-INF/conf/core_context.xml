@@ -48,10 +48,11 @@
 
 	<bean id="securityHeaderCacheService" class="fr.paris.lutece.portal.service.securityheader.SecurityHeaderCacheService" />
 
+	<bean id="portletContentService" class="fr.paris.lutece.portal.service.portlet.PortletContentService" autowire="constructor" />
+
     <!-- since the PageService constructor initializes the two above caches, we choose to inject them through the constructor -->
     <bean id="pageService" class="fr.paris.lutece.portal.service.page.PageService" autowire="constructor">
         <property name="pageCacheKeyService" ref="pageCacheKeyService" />
-        <property name="portletCacheKeyService" ref="portletCacheKeyService" />
         <property name="roleRemovalService" ref="roleRemovalService" />
     </bean>
 

@@ -41,6 +41,7 @@ import fr.paris.lutece.portal.service.portal.PortalMenuService;
 import fr.paris.lutece.portal.service.portal.PortalService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.util.AppLogService;
+import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.portal.web.constants.Markers;
 import fr.paris.lutece.portal.web.constants.Parameters;
@@ -66,7 +67,6 @@ public class TreeMenuInclude implements PageInclude
     private static final String TEMPLATE_TREE_MENU = "skin/site/menu_tree.html";
     private static final String MARK_SITE_PATH = "site_path";
     private static final String MARK_MENU_ITEMS = "items";
-    private static final String PARAMETER_SITE_PATH = "site-path";
 
     /**
      * Substitue specific Freemarker markers in the page template.
@@ -170,12 +170,9 @@ public class TreeMenuInclude implements PageInclude
             }
         }
 
-        Map<String, String> mapParamRequest = new HashMap<>( );
-        PortalService.setXslPortalPath( mapParamRequest, nMode );
-
         Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_MENU_ITEMS, menuItems );
-        model.put( MARK_SITE_PATH, mapParamRequest.get( PARAMETER_SITE_PATH ) );
+        model.put( MARK_SITE_PATH, nMode != PortalMenuService.MODE_ADMIN ? AppPathService.getPortalUrl( ) : AppPathService.getAdminPortalUrl( ) );
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_TREE_MENU, null, model );
         return template.getHtml( );
     }
