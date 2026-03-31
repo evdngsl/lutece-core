@@ -44,7 +44,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 
-import fr.paris.lutece.portal.business.XmlContent;
 import fr.paris.lutece.portal.business.page.Page;
 import fr.paris.lutece.portal.business.page.PageHome;
 import fr.paris.lutece.portal.business.portlet.Portlet;
@@ -69,7 +68,6 @@ import fr.paris.lutece.portal.web.constants.Parameters;
 import fr.paris.lutece.portal.web.l10n.LocaleService;
 import fr.paris.lutece.util.date.DateUtil;
 import fr.paris.lutece.util.html.HtmlTemplate;
-import fr.paris.lutece.util.xml.XmlUtil;
 
 /**
  * This class provides methods to build the pages of the portal and manage the cache
@@ -194,32 +192,6 @@ public final class PortalService
     public static String getDefaultPage( HttpServletRequest request, int nMode ) throws SiteMessageException
     {
         return _pageService.getPage( String.valueOf( getRootPageId( ) ), nMode, request );
-    }
-
-    /**
-     * Return the xml content of the pages contained in the list specified in parameter
-     *
-     * @param listPages
-     *            The pages list
-     * @return the xml code for the content page
-     */
-    public static String getXmlPagesList( Collection<Page> listPages )
-    {
-        StringBuffer strXml = new StringBuffer( );
-        strXml.append( XmlUtil.getXmlHeader( ) );
-        XmlUtil.beginElement( strXml, XmlContent.TAG_CHILD_PAGES_LIST );
-
-        for ( Page page : listPages )
-        {
-            XmlUtil.beginElement( strXml, XmlContent.TAG_PAGE );
-            XmlUtil.addElement( strXml, XmlContent.TAG_PAGE_ID, page.getId( ) );
-            XmlUtil.addElementHtml( strXml, XmlContent.TAG_PAGE_NAME, page.getName( ) );
-            XmlUtil.endElement( strXml, XmlContent.TAG_PAGE );
-        }
-
-        XmlUtil.endElement( strXml, XmlContent.TAG_CHILD_PAGES_LIST );
-
-        return strXml.toString( );
     }
 
     // //////////////////////////////////////////////////////////////////////////

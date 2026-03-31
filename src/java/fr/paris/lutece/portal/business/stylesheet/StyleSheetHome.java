@@ -33,7 +33,7 @@
  */
 package fr.paris.lutece.portal.business.stylesheet;
 
-import fr.paris.lutece.portal.service.html.XmlTransformerService;
+import fr.paris.lutece.portal.service.cache.CacheService;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 import java.util.Collection;
@@ -43,6 +43,7 @@ import java.util.Collection;
  */
 public final class StyleSheetHome
 {
+    private static final String XML_TRANSFORMER_CACHE_NAME = "XML Transformer Cache Service (XSLT)";
     // Static variable pointed to the DAO instance
     private static IStyleSheetDAO _dao = SpringContextService.getBean( "styleSheetDAO" );
 
@@ -76,7 +77,7 @@ public final class StyleSheetHome
     public static void remove( int nId )
     {
         _dao.delete( nId );
-        XmlTransformerService.clearXslCache( );
+        resetCache( );
     }
 
     /**
@@ -88,7 +89,7 @@ public final class StyleSheetHome
     public static void update( StyleSheet stylesheet )
     {
         _dao.store( stylesheet );
-        XmlTransformerService.clearXslCache( );
+        resetCache( );
     }
 
     // /////////////////////////////////////////////////////////////////////////
@@ -131,4 +132,11 @@ public final class StyleSheetHome
     {
         return _dao.selectStyleSheetList( nModeId );
     }
+    
+    private static void resetCache( )
+    {
+        CacheService.getCacheableServicesList( ).stream( ).filter( d -> d.getName( ).equals( XML_TRANSFORMER_CACHE_NAME ) )
+            .findFirst( ).ifPresent( cs -> cs.resetCache( ) );
+    }
+    
 }

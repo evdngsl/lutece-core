@@ -44,7 +44,7 @@ public class PortletContentService
     private static final String PARAMETER_PLUGIN_NAME = "plugin-name";
     private static final String PARAMETER_PORTLET = "portlet";
     private static final int MODE_ADMIN = 1;
-    protected static final String XSL_DEFAULT_VALUE = "";
+    protected static final String XSL_DEFAULT_VALUE = "XSL rendering not implemented";
     private static final String DEFAULT_OPEN_TAG_PREFIX = "<div class=\"lutece-admin-portlet\" draggable=\"true\">";
     private static final String DEFAULT_CLOSE_TAG_PREFIX = "</div>";
     private static final String ADMIN_PORTLET_OPEN_TAG = AppPropertiesService.getProperty( "lutece.portlet.open.tag", DEFAULT_OPEN_TAG_PREFIX );
