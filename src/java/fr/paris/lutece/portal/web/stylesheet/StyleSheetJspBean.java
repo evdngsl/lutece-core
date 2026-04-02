@@ -242,8 +242,8 @@ public class StyleSheetJspBean extends AdminFeaturesPageJspBean
         // insert in the table stylesheet of the database
         StyleSheetHome.create( stylesheet );
 
-        // create a local file
-        localStyleSheetFile( stylesheet );
+//        // create a local file
+//        localStyleSheetFile( stylesheet );
 
         // Displays the list of the stylesheet files
         return getHomeUrl( request );
@@ -381,14 +381,14 @@ public class StyleSheetJspBean extends AdminFeaturesPageJspBean
             throw new AccessDeniedException( ERROR_INVALID_TOKEN );
         }
 
-        // Remove the old local file
-        removeOldLocalStyleSheet( nId );
+//        // Remove the old local file
+//        removeOldLocalStyleSheet( nId );
 
         // Update the stylesheet in database
         StyleSheetHome.update( stylesheet );
 
-        // Recreate the local file
-        localStyleSheetFile( stylesheet );
+//        // Recreate the local file
+//        localStyleSheetFile( stylesheet );
 
         // Displays the management stylesheet page
         return getHomeUrl( request );
@@ -480,48 +480,48 @@ public class StyleSheetJspBean extends AdminFeaturesPageJspBean
         return strError;
     }
 
-    /**
-     * Create and Update the local download file
-     *
-     * @param stylesheet
-     *            The style sheet
-     */
-    private void localStyleSheetFile( StyleSheet stylesheet )
-    {
-        int nModeId = stylesheet.getModeId( );
-        Mode mode = ModeHome.findByPrimaryKey( nModeId );
-        String strPathStyleSheet = AppPathService.getPath( PROPERTY_PATH_XSL ) + mode.getPath( );
-        String strFileName = stylesheet.getFile( );
-        String strFilePath = strPathStyleSheet + strFileName;
-
-        File file = new File( strFilePath );
-        FileUtil.deleteFile( file );
-        try ( FileOutputStream fos = new FileOutputStream( file ) )
-        {
-            fos.write( stylesheet.getSource( ) );
-        }
-        catch( IOException e )
-        {
-            AppLogService.error( e.getMessage( ), e );
-        }
-    }
-
-    /**
-     * remove the xsl file from the tmp directory
-     * 
-     * @param nId
-     *            the identifier of the file
-     */
-    private void removeOldLocalStyleSheet( int nId )
-    {
-        // Remove the file which been modify
-        StyleSheet stylesheet = StyleSheetHome.findByPrimaryKey( nId );
-        int nMode = stylesheet.getModeId( );
-        Mode mode = ModeHome.findByPrimaryKey( nMode );
-        String strPathStyleSheet = AppPathService.getPath( PROPERTY_PATH_XSL ) + mode.getPath( );
-        String strOldFileName = stylesheet.getFile( );
-        String strOldFilePath = strPathStyleSheet + strOldFileName;
-        File oldFile = new File( strOldFilePath );
-        FileUtil.deleteFile( oldFile );
-    }
+//    /**
+//     * Create and Update the local download file
+//     *
+//     * @param stylesheet
+//     *            The style sheet
+//     */
+//    private void localStyleSheetFile( StyleSheet stylesheet )
+//    {
+//        int nModeId = stylesheet.getModeId( );
+//        Mode mode = ModeHome.findByPrimaryKey( nModeId );
+//        String strPathStyleSheet = AppPathService.getPath( PROPERTY_PATH_XSL ) + mode.getPath( );
+//        String strFileName = stylesheet.getFile( );
+//        String strFilePath = strPathStyleSheet + strFileName;
+//
+//        File file = new File( strFilePath );
+//        FileUtil.deleteFile( file );
+//        try ( FileOutputStream fos = new FileOutputStream( file ) )
+//        {
+//            fos.write( stylesheet.getSource( ) );
+//        }
+//        catch( IOException e )
+//        {
+//            AppLogService.error( e.getMessage( ), e );
+//        }
+//    }
+//
+//    /**
+//     * remove the xsl file from the tmp directory
+//     * 
+//     * @param nId
+//     *            the identifier of the file
+//     */
+//    private void removeOldLocalStyleSheet( int nId )
+//    {
+//        // Remove the file which been modify
+//        StyleSheet stylesheet = StyleSheetHome.findByPrimaryKey( nId );
+//        int nMode = stylesheet.getModeId( );
+//        Mode mode = ModeHome.findByPrimaryKey( nMode );
+//        String strPathStyleSheet = AppPathService.getPath( PROPERTY_PATH_XSL ) + mode.getPath( );
+//        String strOldFileName = stylesheet.getFile( );
+//        String strOldFilePath = strPathStyleSheet + strOldFileName;
+//        File oldFile = new File( strOldFilePath );
+//        FileUtil.deleteFile( oldFile );
+//    }
 }
