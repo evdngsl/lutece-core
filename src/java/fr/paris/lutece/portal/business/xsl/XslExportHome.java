@@ -34,7 +34,7 @@
 package fr.paris.lutece.portal.business.xsl;
 
 import fr.paris.lutece.portal.business.file.FileHome;
-import fr.paris.lutece.portal.service.html.XmlTransformerService;
+import fr.paris.lutece.portal.service.cache.CacheService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.util.ReferenceList;
@@ -46,6 +46,7 @@ import java.util.List;
  */
 public final class XslExportHome
 {
+    private static final String XML_TRANSFORMER_CACHE_NAME = "XML Transformer Cache Service (XSLT)";
     // Static variable pointed at the DAO instance
     private static IXslExportDAO _dao = SpringContextService.getBean( "xslExportDAO" );
 
@@ -77,7 +78,7 @@ public final class XslExportHome
     public static void update( XslExport xslExport )
     {
         _dao.store( xslExport );
-        XmlTransformerService.clearXslCache( );
+        resetCache( );
     }
 
     /**
@@ -89,7 +90,7 @@ public final class XslExportHome
     public static void remove( int nIdXslExport )
     {
         _dao.delete( nIdXslExport );
-        XmlTransformerService.clearXslCache( );
+        resetCache( );
     }
 
     // /////////////////////////////////////////////////////////////////////////
@@ -174,5 +175,11 @@ public final class XslExportHome
         }
 
         return refList;
+    }
+
+    private static void resetCache( )
+    {
+        CacheService.getCacheableServicesList( ).stream( ).filter( d -> d.getName( ).equals( XML_TRANSFORMER_CACHE_NAME ) )
+            .findFirst( ).ifPresent( cs -> cs.resetCache( ) );
     }
 }

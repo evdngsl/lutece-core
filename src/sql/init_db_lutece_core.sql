@@ -26,8 +26,6 @@ INSERT INTO core_admin_right VALUES ('CORE_RIGHT_MANAGEMENT', 'portal.users.admi
 INSERT INTO core_admin_right VALUES ('CORE_ROLES_MANAGEMENT', 'portal.role.adminFeature.roles_management.name', 2, 'jsp/admin/role/ManagePageRole.jsp', 'portal.role.adminFeature.roles_management.description', 0, '', 'USERS', 'ti ti-list-check', NULL, 2, 0);
 INSERT INTO core_admin_right VALUES ('CORE_SEARCH_INDEXATION', 'portal.search.adminFeature.indexer.name', 0, 'jsp/admin/search/ManageSearchIndexation.jsp', 'portal.search.adminFeature.indexer.description', 0, '', 'SYSTEM', 'ti ti-settings-search', NULL, 2, 0);
 INSERT INTO core_admin_right VALUES ('CORE_SEARCH_MANAGEMENT', 'portal.search.adminFeature.search_management.name', 0, NULL, 'portal.search.adminFeature.search_management.description', 0, '', 'SYSTEM', 'ti ti-database-search', NULL, 3, 0);
-INSERT INTO core_admin_right VALUES ('CORE_STYLES_MANAGEMENT', 'portal.style.adminFeature.styles_management.name', 0, 'jsp/admin/style/ManageStyles.jsp', 'portal.style.adminFeature.styles_management.description', 1, '', 'STYLE', 'ti ti-brush', NULL, 3, 0);
-INSERT INTO core_admin_right VALUES ('CORE_STYLESHEET_MANAGEMENT', 'portal.style.adminFeature.stylesheet_management.name', 0, 'jsp/admin/style/ManageStyleSheets.jsp', 'portal.style.adminFeature.stylesheet_management.description', 1, '', 'STYLE', 'ti ti-file-code', NULL, 2, 0);
 INSERT INTO core_admin_right VALUES ('CORE_TEMPLATES_AUTO_INCLUDES_MANAGEMENT', 'portal.templates.adminFeature.ManageAutoIncludes.name', 1, NULL, 'portal.templates.adminFeature.ManageAutoIncludes.description', 1, '', 'STYLE', 'ti ti-code-circle-2', NULL, 4, 0);
 INSERT INTO core_admin_right VALUES ('CORE_USERS_MANAGEMENT', 'portal.users.adminFeature.users_management.name', 2, 'jsp/admin/user/ManageUsers.jsp', 'portal.users.adminFeature.users_management.description', 1, '', 'MANAGERS', 'ti ti-users', NULL, 2, 0);
 INSERT INTO core_admin_right VALUES ('CORE_WORKGROUPS_MANAGEMENT', 'portal.workgroup.adminFeature.workgroups_management.name', 2, 'jsp/admin/workgroup/ManageWorkgroups.jsp', 'portal.workgroup.adminFeature.workgroups_management.description', 0, '', 'MANAGERS', 'ti ti-users-group', NULL, 3, 0);
@@ -111,8 +109,6 @@ INSERT INTO core_user_right VALUES ('CORE_SEARCH_INDEXATION',1);
 INSERT INTO core_user_right VALUES ('CORE_SEARCH_INDEXATION',2);
 INSERT INTO core_user_right VALUES ('CORE_SEARCH_MANAGEMENT',1);
 INSERT INTO core_user_right VALUES ('CORE_SEARCH_MANAGEMENT',2);
-INSERT INTO core_user_right VALUES ('CORE_STYLES_MANAGEMENT',1);
-INSERT INTO core_user_right VALUES ('CORE_STYLESHEET_MANAGEMENT',1);
 INSERT INTO core_user_right VALUES ('CORE_USERS_MANAGEMENT',1);
 INSERT INTO core_user_right VALUES ('CORE_USERS_MANAGEMENT',2);
 INSERT INTO core_user_right VALUES ('CORE_WORKGROUPS_MANAGEMENT',1);
